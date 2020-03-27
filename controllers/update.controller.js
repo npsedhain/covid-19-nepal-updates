@@ -5,13 +5,22 @@ const getUpdates = async (req, res) => {
 
   const { district, start } = req.query;
 
-  const hospitals = updates.filter(
-    hospital => hospital.district.toUpperCase() === district.toUpperCase()
-  );
+  if (district) {
+    const hospitals = updates.filter(
+      hospital => hospital.district.toUpperCase() === district.toUpperCase()
+    );
 
-  const response = hospitals.slice((start - 1) * 5);
+    if (start) {
+      const response = hospitals.slice((start - 1) * 5);
 
-  res.status(200).json({ length: response.length, hospitals: response });
+      res.status(200).json({ length: response.length, hospitals: response });
+      return;
+    }
+
+    res.status(200).json({ length: hospitals.length, hospitals });
+    return;
+  }
+  res.status(200).json({ length: updates.length, hospitals: updates });
 };
 
 module.exports = {
