@@ -3,24 +3,21 @@ const service = require("../updateService");
 const getUpdates = async (req, res) => {
   const updates = await service.getData();
 
-  const { district, start } = req.query;
+  const { district, covidTest } = req.query;
+
+  let hospitals = updates;
 
   if (district) {
-    const hospitals = updates.filter(
+    hospitals = hospitals.filter(
       hospital => hospital.district.toUpperCase() === district.toUpperCase()
     );
-
-    if (start) {
-      const response = hospitals.slice((start - 1) * 5);
-
-      res.status(200).json({ length: response.length, hospitals: response });
-      return;
-    }
-
-    res.status(200).json({ length: hospitals.length, hospitals });
-    return;
   }
-  res.status(200).json({ length: updates.length, hospitals: updates });
+
+  if (covidTest) {
+    hospitals = hospitals.filter(hospital => hospital.covidTest);
+  }
+
+  res.status(200).json({ length: hospitals.length, hospitals });
 };
 
 module.exports = {
