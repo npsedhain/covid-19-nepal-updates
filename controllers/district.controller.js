@@ -99,7 +99,8 @@ const getDistrictCases = async (req, res) => {
     response.Province7.districtData[district.name] = district;
   });
 
-  res.json(response);
+  res.status(200).json(response);
+  return response;
 };
 
 const addDistrictCases = (req, res) => {
