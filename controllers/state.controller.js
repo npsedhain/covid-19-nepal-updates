@@ -18,7 +18,7 @@ const getTotalStates = states => {
     deaths: deaths - states[7].deaths,
     recovered: recovered - states[7].recovered
   };
-  const lastupdatedtime = Date.now();
+  const lastupdatedtime = states[7].lastupdatedtime;
   const state = "Total";
 
   return {
