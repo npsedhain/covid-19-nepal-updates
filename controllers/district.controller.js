@@ -104,12 +104,11 @@ const getDistrictCases = async (req, res) => {
 };
 
 const addDistrictCases = (req, res) => {
-  const lastupdatedtime = Date.now();
 
   District.findOne({ name: req.body.name })
     .then(district => {
       if (district === null) {
-        const { name, state, active, confirmed, deaths, recovered } = req.body;
+        const { name, state, active, confirmed, deaths, recovered, lastupdatedtime } = req.body;
 
         const newDistrict = new District({
           name,
@@ -138,7 +137,8 @@ const addDistrictCases = (req, res) => {
         active = district.active,
         confirmed = district.confirmed,
         deaths = district.deaths,
-        recovered = district.recovered
+        recovered = district.recovered,
+        lastupdatedtime
       } = req.body;
 
       District.findOneAndUpdate(

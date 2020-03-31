@@ -26,7 +26,7 @@ const State = mongoose.Schema({
     required: true
   },
   lastupdatedtime: {
-    type: Date
+    type: String
   }
 });
 

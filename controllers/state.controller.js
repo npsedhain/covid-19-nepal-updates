@@ -54,14 +54,20 @@ const updateStateCases = async (req, res) => {
   const oldState = await State.findOne({ state: req.body.state });
 
   if (oldState === null) {
-    const { state, active, confirmed, deaths, recovered } = req.body;
+    const {
+      state,
+      active,
+      confirmed,
+      deaths,
+      recovered,
+      lastupdatedtime
+    } = req.body;
     const delta = {
       active: 0,
       confirmed: 0,
       deaths: 0,
       recovered: 0
     };
-    const lastupdatedtime = Date.now();
 
     const newState = new State({
       state,
@@ -89,7 +95,8 @@ const updateStateCases = async (req, res) => {
     active = oldState.active,
     confirmed = oldState.confirmed,
     deaths = oldState.deaths,
-    recovered = oldState.recovered
+    recovered = oldState.recovered,
+    lastupdatedtime
   } = req.body;
 
   const delta = {
@@ -98,8 +105,6 @@ const updateStateCases = async (req, res) => {
     deaths: deaths - oldState.deaths,
     recovered: recovered - oldState.recovered
   };
-
-  const lastupdatedtime = Date.now();
 
   State.findOneAndUpdate(
     { state },
@@ -114,7 +119,7 @@ const updateStateCases = async (req, res) => {
     },
     { useFindAndModify: false, new: true }
   )
-    .then(state => {
+    .then(async state => {
       if (state === null) {
         res.status(404).json({
           error: true,
@@ -122,6 +127,11 @@ const updateStateCases = async (req, res) => {
         });
         return;
       }
+      await State.findOneAndUpdate(
+        { state: "Total" },
+        { lastupdatedtime },
+        { useFindAndModify: false, new: true }
+      );
       res.status(200).json({ state });
     })
     .catch(error => {
